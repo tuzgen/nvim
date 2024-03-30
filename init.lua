@@ -35,6 +35,12 @@ require('lazy').setup({
       }
     end
   },
+  {
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    ft = { "markdown" },
+    build = function() vim.fn["mkdp#util#install"]() end,
+  },
   {'nvim-treesitter/nvim-treesitter-context',
   config = function ()
     require'treesitter-context'.setup{
@@ -383,6 +389,12 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- [[ Configure Telescope ]]
 require('telescope').setup {
   pickers = {
+    resume = {
+      initial_mode = 'normal',
+    },
+    buffers = {
+      initial_mode = 'normal',
+    },
     find_files = {
       hidden = true,
     },
