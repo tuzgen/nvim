@@ -17,10 +17,10 @@ vim.opt.rtp:prepend(lazypath)
 
 -- [[ Configure plugins ]]
 require('lazy').setup({
-  'github/copilot.vim',
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
   'tpope/vim-sleuth',
+  'tpope/vim-surround',
   {
     'ruifm/gitlinker.nvim',
     dependencies = {
@@ -34,6 +34,18 @@ require('lazy').setup({
         },
       }
     end
+  },
+  {
+    "HakonHarnes/img-clip.nvim",
+    event = "BufEnter",
+    opts = {
+      -- add options here
+      -- or leave it empty to use the default settings
+    },
+    keys = {
+      -- suggested keymap
+      { "<leader>p", "<cmd>PasteImage<cr>", desc = "Paste clipboard image" },
+    },
   },
   {
     "iamcco/markdown-preview.nvim",
@@ -164,7 +176,9 @@ require('lazy').setup({
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
 
-      'rafamadriz/friendly-snippets',
+      {
+        'rafamadriz/friendly-snippets',
+      },
     },
   },
 
@@ -647,8 +661,9 @@ mason_lspconfig.setup_handlers {
 -- [[ Configure nvim-cmp ]]
 local cmp = require 'cmp'
 local luasnip = require 'luasnip'
-require('luasnip.loaders.from_vscode').lazy_load()
-luasnip.config.setup {}
+require('luasnip.loaders.from_vscode').lazy_load({
+  exclude = { "markdown", "global", "all" },
+})
 
 cmp.setup {
   snippet = {
