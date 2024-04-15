@@ -21,6 +21,8 @@ require('lazy').setup({
   'tpope/vim-rhubarb',
   'tpope/vim-sleuth',
   'tpope/vim-surround',
+  'tpope/vim-abolish',
+{ "ellisonleao/gruvbox.nvim", priority = 1000 , config = true, opts = ...},
   {
     'ruifm/gitlinker.nvim',
     dependencies = {
@@ -279,14 +281,14 @@ require('lazy').setup({
     },
   },
 
-  {
-    'mcchrish/zenbones.nvim',
-    lazy = false,
-    config = function()
-      vim.g.zenbones_compat = 1
-      vim.cmd 'colorscheme zenbones'
-    end,
-  },
+  -- {
+  --   'mcchrish/zenbones.nvim',
+  --   lazy = false,
+  --   config = function()
+  --     vim.g.zenbones_compat = 1
+  --     vim.cmd 'colorscheme zenbones'
+  --   end,
+  -- },
 
   {
     -- Add indentation guides even on blank lines
@@ -376,6 +378,7 @@ vim.api.nvim_command 'autocmd InsertLeave * set guicursor='
 vim.api.nvim_command 'augroup END'
 
 -- [[ Basic Keymaps ]]
+vim.api.nvim_set_keymap('t', '<Esc>', '<C-\\><C-n>', {noremap = true})
 
 -- Keymaps for better default experience
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
@@ -403,6 +406,12 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- [[ Configure Telescope ]]
 require('telescope').setup {
   pickers = {
+    grep_string = {
+      initial_mode = 'normal',
+    },
+    diagnostics = {
+      initial_mode = 'normal',
+    },
     resume = {
       initial_mode = 'normal',
     },
@@ -710,3 +719,5 @@ NoNeckPain()
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
 --
+vim.o.background = "dark" -- or "light" for light mode
+vim.cmd([[colorscheme gruvbox]])
