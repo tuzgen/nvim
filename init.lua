@@ -22,7 +22,6 @@ require('lazy').setup({
   'tpope/vim-sleuth',
   'tpope/vim-surround',
   'tpope/vim-abolish',
-{ "ellisonleao/gruvbox.nvim", priority = 1000 , config = true, opts = ...},
   {
     'ruifm/gitlinker.nvim',
     dependencies = {
@@ -281,14 +280,14 @@ require('lazy').setup({
     },
   },
 
-  -- {
-  --   'mcchrish/zenbones.nvim',
-  --   lazy = false,
-  --   config = function()
-  --     vim.g.zenbones_compat = 1
-  --     vim.cmd 'colorscheme zenbones'
-  --   end,
-  -- },
+  {
+    'mcchrish/zenbones.nvim',
+    lazy = false,
+    config = function()
+      vim.g.zenbones_compat = 1
+      vim.cmd 'colorscheme zenbones'
+    end,
+  },
 
   {
     -- Add indentation guides even on blank lines
@@ -720,4 +719,3 @@ NoNeckPain()
 -- vim: ts=2 sts=2 sw=2 et
 --
 vim.o.background = "dark" -- or "light" for light mode
-vim.cmd([[colorscheme gruvbox]])
