@@ -22,6 +22,7 @@ require('lazy').setup({
   'tpope/vim-sleuth',
   'tpope/vim-surround',
   'tpope/vim-abolish',
+	{ "ellisonleao/gruvbox.nvim", priority = 1000 , config = true, opts = ...},
   {
     'ruifm/gitlinker.nvim',
     dependencies = {
@@ -280,14 +281,14 @@ require('lazy').setup({
     },
   },
 
-  {
-    'mcchrish/zenbones.nvim',
-    lazy = false,
-    config = function()
-      vim.g.zenbones_compat = 1
-      vim.cmd 'colorscheme zenbones'
-    end,
-  },
+  -- {
+  --   'mcchrish/zenbones.nvim',
+  --   lazy = false,
+  --   config = function()
+  --     vim.g.zenbones_compat = 1
+  --     vim.cmd 'colorscheme zenbones'
+  --   end,
+  -- },
 
   {
     -- Add indentation guides even on blank lines
@@ -381,6 +382,8 @@ vim.api.nvim_set_keymap('t', '<Esc>', '<C-\\><C-n>', {noremap = true})
 
 -- Keymaps for better default experience
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
+
+vim.api.nvim_set_keymap('t', '<Esc>', '<C-\\><C-n>', {noremap = true})
 
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
@@ -498,6 +501,7 @@ end
 vim.keymap.set('n', '<leader>s/', telescope_live_grep_open_files, { desc = '[S]earch [/] in Open Files' })
 vim.keymap.set('n', '<leader>ss', require('telescope.builtin').builtin, { desc = '[S]earch [S]elect Telescope' })
 vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
+vim.keymap.set('n', '<leader>gc', require('telescope.builtin').git_branches, { desc = '[G]it [C]heckout' })
 vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
@@ -514,7 +518,7 @@ end, { desc = '[S]earch [C]ommands' })
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
+    ensure_installed = { 'c', 'cpp', 'go', 'java', 'lua', 'kotlin', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
@@ -719,3 +723,4 @@ NoNeckPain()
 -- vim: ts=2 sts=2 sw=2 et
 --
 vim.o.background = "dark" -- or "light" for light mode
+vim.cmd 'colorscheme gruvbox'
