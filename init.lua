@@ -26,13 +26,13 @@ require('lazy').setup({
   {
     'ruifm/gitlinker.nvim',
     dependencies = {
-     'nvim-lua/plenary.nvim',
+      'nvim-lua/plenary.nvim',
     },
-    config = function ()
+    config = function()
       require('gitlinker').setup {
         opts = {
           -- action_callback = require('gitlinker.actions').open_in_browser,
-            action_callback = require"gitlinker.actions".copy_to_clipboard,
+          action_callback = require "gitlinker.actions".copy_to_clipboard,
         },
       }
     end
@@ -55,17 +55,61 @@ require('lazy').setup({
     ft = { "markdown" },
     build = function() vim.fn["mkdp#util#install"]() end,
   },
-  {'nvim-treesitter/nvim-treesitter-context',
-  config = function ()
-    require'treesitter-context'.setup{
-      max_lines = 3, -- How many lines the window should span. Values <= 0 mean no limit.
-      min_window_height = 0, -- Minimum editor window height to enable context. Values <= 0 mean no limit.
-      line_numbers = true,
-      multiline_threshold = 20, -- Maximum number of lines to show for a single context
-      trim_scope = 'inner', -- Which context lines to discard if `max_lines` is exceeded. Choices: 'inner', 'outer'
-      mode = 'cursor',  -- Line used to calculate context. Choices: 'cursor', 'topline'
-    }
-  end},
+
+  {
+    'nvim-treesitter/nvim-treesitter-context',
+    config = function()
+      require 'treesitter-context'.setup {
+        max_lines = 3,            -- How many lines the window should span. Values <= 0 mean no limit.
+        min_window_height = 0,    -- Minimum editor window height to enable context. Values <= 0 mean no limit.
+        line_numbers = true,
+        multiline_threshold = 20, -- Maximum number of lines to show for a single context
+        trim_scope = 'inner',     -- Which context lines to discard if `max_lines` is exceeded. Choices: 'inner', 'outer'
+        mode = 'cursor',          -- Line used to calculate context. Choices: 'cursor', 'topline'
+      }
+    end
+  },
+
+  { -- Autoformat
+    'stevearc/conform.nvim',
+    lazy = false,
+    keys = {
+      {
+        '<leader>f',
+        function()
+          require('conform').format { async = true, lsp_fallback = true }
+        end,
+        mode = '',
+        desc = '[F]ormat buffer',
+      },
+    },
+    opts = {
+      notify_on_error = false,
+      format_on_save = function(bufnr)
+        -- Disable "format_on_save lsp_fallback" for languages that don't
+        -- have a well standardized coding style. You can add additional
+        -- languages here or re-enable it for the disabled ones.
+        local disable_filetypes = { c = true, cpp = true }
+        return {
+          timeout_ms = 500,
+          lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
+        }
+      end,
+      formatters_by_ft = {
+        lua = { 'stylua' },
+        -- Conform can also run multiple formatters sequentially
+        -- python = { "isort", "black" },
+        --
+        -- You can use a sub-list to tell conform to run *until* a formatter
+        -- is found.
+        javascript = { { 'prettierd', 'prettier' } },
+        typescript = { { 'prettierd', 'prettier' } },
+        json = { { 'prettierd', 'prettier' } },
+        go = { 'gopls' },
+        yaml = { 'yamlfmt' },
+      },
+    },
+  },
 
   {
     'tomasky/bookmarks.nvim',
@@ -73,11 +117,11 @@ require('lazy').setup({
       require('bookmarks').setup()
       local bm = require 'bookmarks'
       vim.keymap.set('n', 'mm', bm.bookmark_toggle) -- add or remove bookmark at current line
-      vim.keymap.set('n', 'mi', bm.bookmark_ann) -- add or edit mark annotation at current line
-      vim.keymap.set('n', 'mc', bm.bookmark_clean) -- clean all marks in local buffer
-      vim.keymap.set('n', 'mn', bm.bookmark_next) -- jump to next mark in local buffer
-      vim.keymap.set('n', 'mp', bm.bookmark_prev) -- jump to previous mark in local buffer
-      vim.keymap.set('n', 'ml', bm.bookmark_list) -- show marked file list in quickfix window
+      vim.keymap.set('n', 'mi', bm.bookmark_ann)    -- add or edit mark annotation at current line
+      vim.keymap.set('n', 'mc', bm.bookmark_clean)  -- clean all marks in local buffer
+      vim.keymap.set('n', 'mn', bm.bookmark_next)   -- jump to next mark in local buffer
+      vim.keymap.set('n', 'mp', bm.bookmark_prev)   -- jump to previous mark in local buffer
+      vim.keymap.set('n', 'ml', bm.bookmark_list)   -- show marked file list in quickfix window
     end,
   },
   {
@@ -154,7 +198,7 @@ require('lazy').setup({
       'williamboman/mason-lspconfig.nvim',
 
       -- Useful status updates for LSP
-      { 'j-hui/fidget.nvim', opts = {} },
+      { 'j-hui/fidget.nvim',       opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
@@ -290,6 +334,19 @@ require('lazy').setup({
   --   end,
   -- },
 
+  -- theming
+  -- auto enable dark mode or light mode by system theme
+  'vimpostor/vim-lumen',
+  -- themes
+  {
+    'mcchrish/zenbones.nvim',
+    lazy = false,
+    config = function()
+      vim.g.zenbones_compat = 1
+    end,
+  },
+  'aditya-azad/candle-grey',
+  'ellisonleao/gruvbox.nvim',
   {
     -- Add indentation guides even on blank lines
     'lukas-reineke/indent-blankline.nvim',
@@ -378,7 +435,7 @@ vim.api.nvim_command 'autocmd InsertLeave * set guicursor='
 vim.api.nvim_command 'augroup END'
 
 -- [[ Basic Keymaps ]]
-vim.api.nvim_set_keymap('t', '<Esc>', '<C-\\><C-n>', {noremap = true})
+vim.api.nvim_set_keymap('t', '<Esc>', '<C-\\><C-n>', { noremap = true })
 
 -- Keymaps for better default experience
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
@@ -418,6 +475,12 @@ require('telescope').setup {
       initial_mode = 'normal',
     },
     buffers = {
+      initial_mode = 'normal',
+    },
+    lsp_references = {
+      initial_mode = 'normal',
+    },
+    lsp_implementations = {
       initial_mode = 'normal',
     },
     find_files = {
@@ -499,20 +562,30 @@ local function telescope_live_grep_open_files()
 end
 
 vim.keymap.set('n', '<leader>s/', telescope_live_grep_open_files, { desc = '[S]earch [/] in Open Files' })
-vim.keymap.set('n', '<leader>ss', require('telescope.builtin').builtin, { desc = '[S]earch [S]elect Telescope' })
+-- vim.keymap.set('n', '<leader>ss', require('telescope.builtin').builtin, { desc = '[S]earch [S]elect Telescope' })
 vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
 vim.keymap.set('n', '<leader>gc', require('telescope.builtin').git_branches, { desc = '[G]it [C]heckout' })
+vim.keymap.set('n', '<leader>ss', require('telescope.builtin').treesitter, { desc = '[S]earch [S]ymbols' })
 vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
-vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
+-- vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
-vim.keymap.set('n', '<leader>sG', ':LiveGrepGitRoot<cr>', { desc = '[S]earch by [G]rep on Git Root' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
-vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
+vim.keymap.set('n', '<leader>s.', require('telescope.builtin').resume, { desc = '[S]earch resume' })
 vim.keymap.set('n', '<leader>sc', require('telescope.builtin').commands, { desc = '[S]earch [C]ommands' })
 vim.keymap.set('n', '<leader>sb', function()
   require('telescope').extensions.bookmarks.list()
-end, { desc = '[S]earch [C]ommands' })
+end, { desc = '[S]earch [B]ookmarks' })
+
+-- git keybindings
+vim.keymap.set('n', '<leader>gaa', ":Git add .<cr>", { desc = '[G]it [A]dd [A]ll' })
+vim.keymap.set('n', '<leader>gcm', ":Git commit -m \"", { desc = '[G]it [C]ommit' })
+vim.keymap.set('n', '<leader>gca', ":Git commit --amend<cr>", { desc = '[G]it [C]ommit [A]mend' })
+vim.keymap.set('n', '<leader>gm', ":Git merge ", { desc = '[G]it [M]erge' })
+vim.keymap.set('n', '<leader>gcb', ":Git checkout -b ", { desc = '[G]it [C]heckout new [B]ranch' })
+vim.keymap.set('n', '<leader>gco', ":Git checkout ", { desc = '[G]it [C]heckout' })
+vim.keymap.set('n', '<leader>gs', ":Git status<cr>", { desc = '[G]it [S]tatus' })
+vim.keymap.set('n', '<leader>gp', ":Git push<cr>", { desc = '[G]it [P]ush' })
 
 -- [[ Configure Treesitter ]]
 vim.defer_fn(function()
@@ -603,7 +676,7 @@ local on_attach = function(_, bufnr)
 
   nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-  nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
+  nmap('gi', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
   nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
   nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
@@ -619,10 +692,11 @@ local on_attach = function(_, bufnr)
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, '[W]orkspace [L]ist Folders')
 
+  nmap('<leader>f', vim.lsp.buf.format, '[F]ormat current buffer')
+
   -- Create a command `:Format` local to the LSP buffer
-  vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-    vim.lsp.buf.format()
-  end, { desc = 'Format current buffer with LSP' })
+  vim.api.nvim_buf_create_user_command(bufnr, 'Format',
+    vim.lsp.buf.format, { desc = 'Format current buffer with LSP' })
 end
 
 -- mason-lspconfig requires that these setup functions are called in this order
@@ -634,6 +708,9 @@ local servers = {
   gopls = { filetypes = { 'go' } },
   -- tsserver = {},
   html = { filetypes = { 'html', 'hbs' } },
+
+  eslint = { filetypes = { 'typescript', 'javascript', } },
+  tsserver = { filetypes = { 'typescript', 'javascript' } },
 
   lua_ls = {
     Lua = {
@@ -713,14 +790,12 @@ vim.o.statusline = "%<%f %h%m%r%{FugitiveStatusline()}%= %-14.(%l,%c%V%) %P"
 
 -- Define FugitiveStatusline function
 function FugitiveStatusline()
-    return vim.fn["fugitive#statusline"]()
+  return vim.fn["fugitive#statusline"]()
 end
-
 
 NoNeckPain()
 
+vim.cmd [[colorscheme gruvbox]]
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
---
-vim.o.background = "dark" -- or "light" for light mode
-vim.cmd 'colorscheme gruvbox'
