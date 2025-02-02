@@ -17,12 +17,19 @@ vim.opt.rtp:prepend(lazypath)
 
 -- [[ Configure plugins ]]
 require('lazy').setup({
+  -- Tim Pope Shrine
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
   'tpope/vim-sleuth',
   'tpope/vim-surround',
   'tpope/vim-abolish',
-	{ "ellisonleao/gruvbox.nvim", priority = 1000 , config = true, opts = ...},
+
+  {
+    'mechatroner/rainbow_csv',
+    config = function()
+      vim.cmd 'let g:rcsv_colorpairs = [["red", "#f6513f"], ["blue", "#326ede"], ["green", "#afaf00"]]'
+    end
+  },
   {
     'ruifm/gitlinker.nvim',
     dependencies = {
@@ -343,10 +350,30 @@ require('lazy').setup({
     lazy = false,
     config = function()
       vim.g.zenbones_compat = 1
+
+      vim.cmd.colorscheme "zenbones"
     end,
+    enabled = false
   },
-  'aditya-azad/candle-grey',
-  'ellisonleao/gruvbox.nvim',
+  {
+    'Mofiqul/vscode.nvim',
+    config = function ()
+      require('vscode').setup({
+        italic_comments = false,
+        underline_links = false,
+      })
+
+      vim.cmd.colorscheme "vscode"
+    end
+  },
+  {
+    'ellisonleao/gruvbox.nvim',
+    config = function()
+      vim.cmd.colorscheme "gruvbox"
+    end,
+    enabled = false
+  },
+
   {
     -- Add indentation guides even on blank lines
     'lukas-reineke/indent-blankline.nvim',
@@ -711,6 +738,7 @@ local servers = {
 
   eslint = { filetypes = { 'typescript', 'javascript', } },
   tsserver = { filetypes = { 'typescript', 'javascript' } },
+  pylsp = {  filetypes= { 'python' } },
 
   lua_ls = {
     Lua = {
@@ -794,8 +822,6 @@ function FugitiveStatusline()
 end
 
 NoNeckPain()
-
-vim.cmd [[colorscheme gruvbox]]
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
